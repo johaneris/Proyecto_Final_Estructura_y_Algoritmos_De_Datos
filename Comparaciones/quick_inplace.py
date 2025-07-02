@@ -1,5 +1,6 @@
 import sys
 import time
+import tracemalloc
 
 def quicksort_inplace(arr, low=0, high=None):
     if high is None:
@@ -32,11 +33,18 @@ def main():
     archivo = sys.argv[1]
     datos = cargar_datos(archivo)
     
+    tracemalloc.start()
+    
     inicio = time.time()
     quicksort_inplace(datos)
     fin = time.time()
     
-    print(f"Tiempo de ejecución: {fin-inicio:.4f} segundos")
+    current, peak = tracemalloc.get_traced_memory()
     
+    print(f"\n\nTiempo de ejecución: {fin-inicio:.4f} segundos")
+    print(f"Memoria usada: {current / 1024:.6f} KB")
+    print(f"Pico de memoria: {peak / 1024:.6f} KB")
+    
+    tracemalloc.stop()
 if __name__ == "__main__":
     main()
